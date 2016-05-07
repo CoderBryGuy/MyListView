@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Bryan on 5/7/2016.
  */
@@ -24,6 +26,8 @@ public class MyView extends ViewGroup {
 
     private int deviceWidth;
     private final static int STAR_COUNT = 5;
+    //private ArrayList<ImageView> starList;
+    private final ImageView[] startList = new ImageView[STAR_COUNT];
 
     public MyView(Context context) {
         super(context);
@@ -38,7 +42,8 @@ public class MyView extends ViewGroup {
             imageView.setImageResource(R.drawable.star_checkbox_unchecked1);
             imageView.setTag(i+1);
            // Tag myTag = (Tag)imageView.getTag();
-            MyOnClickListener myOnClickListener = new MyOnClickListener(this.context, i+1 , linearLayout);
+            startList[i] = imageView;
+            MyOnClickListener myOnClickListener = new MyOnClickListener(this.context, i+1 , startList, linearLayout);
             imageView.setOnClickListener(myOnClickListener);
             linearLayout.addView(imageView);
         }
@@ -63,22 +68,43 @@ public class MyView extends ViewGroup {
         private Context context;
         private int tagKey;
         private LinearLayout linearLayout;
+        private ImageView[] starsList;
 
-        public MyOnClickListener(Context context, int tagKey, LinearLayout linearLayout){
+        public MyOnClickListener(Context context, int tagKey, ImageView[] starsList, LinearLayout linearLayout){
             this.context = context;
             this.tagKey = tagKey;
             this.linearLayout = linearLayout;
+            this.starsList = starsList;
+
         }
         @Override
         public void onClick(View v) {
-
-
+//=========================================================
+            //the code below is experimental
+//=========================================================
             for (int i = 0; i < STAR_COUNT; i++) {
-             //ImageView imageView = (ImageView)v.findViewWithTag(i+1);
-             //ImageView imageView = (ImageView)v;
-              // imageView.setVisibility(View.INVISIBLE);
-                //imageView.setImageBitmap(null);
-             }
+                starsList[i].setVisibility(INVISIBLE);
+            }
+
+            for (int i = 0; i < tagKey; i++) {
+                ImageView imageView = new ImageView(context);
+                imageView.setImageResource(R.drawable.star_checkbox_checked1);
+                imageView.setTag(i+1);
+                linearLayout.addView(imageView);
+            }
+            for (int i = 0; i < STAR_COUNT - tagKey; i++) {
+                ImageView imageView = new ImageView(context);
+                imageView.setImageResource(R.drawable.star_checkbox_unchecked1);
+                imageView.setTag(i+1);
+                linearLayout.addView(imageView);
+            }
+
+//=========================================================
+            //the code below works
+//=========================================================
+   /*         for (int i = 0; i < STAR_COUNT; i++) {
+                starsList[i].setVisibility(INVISIBLE);
+            }
 
             for (int i = 0; i < tagKey; i++) {
                ImageView imageView = new ImageView(context);
@@ -91,8 +117,10 @@ public class MyView extends ViewGroup {
                 imageView.setImageResource(R.drawable.star_checkbox_unchecked1);
                 imageView.setTag(i+1);
                 linearLayout.addView(imageView);
-            }
-        }
+            }*/
+
+//=========================================================
+        }//end onClick(View v)
     }
 
     @Override
